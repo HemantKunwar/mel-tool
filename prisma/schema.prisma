@@ -1,0 +1,127 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Staff {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  role      Role
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  STAFF
+  ADMIN
+}
+
+model StrategicObjective {
+  id                 Int       @id @default(autoincrement())
+  name               String
+  outcome            String
+  kpi                String
+  targetValue        Float
+  actualValue        Float
+  progressPercentage Float
+  status             Status
+  responsibleTeam    Team?     @relation(fields: [teamId], references: [id])
+  teamId             Int?
+  lastUpdated        DateTime
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  Projects           Project[]
+}
+
+model Project {
+  id                   Int                 @id @default(autoincrement())
+  projectName          String
+  projectObjective     String
+  strategicObjective   StrategicObjective  @relation(fields: [strategicObjectiveId], references: [id])
+  strategicObjectiveId Int
+  projectOutcome       String
+  activity             String
+  projectKpi           String
+  targetValue          Float
+  actualValue          Float
+  progressPercentage   Float
+  status               Status
+  responsibleTeam      Team?               @relation(fields: [teamId], references: [id])
+  teamId               Int?
+  timeline             String
+  lastUpdated          DateTime
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+  Workshops            Workshop[]
+  Livelihoods          Livelihood[]
+}
+
+model Team {
+  id                   Int                  @id @default(autoincrement())
+  name                 String
+  Projects             Project[]
+  StrategicObjectives  StrategicObjective[]
+}
+
+model Workshop {
+  id                        Int      @id @default(autoincrement())
+  projectId                 Int
+  numParticipants           Int
+  disaggregatedSex          Gender
+  disability                Boolean
+  ageGroup                  AgeGroup
+  preEvaluation             String
+  postEvaluation            String
+  localPartner              String
+  localPartnerResponsibility String
+  successOfPartnership      String
+  challenges                String
+  strengths                 String
+  outcomes                  String
+  recommendations           String
+  Project                   Project  @relation(fields: [projectId], references: [id])
+}
+
+model Livelihood {
+  id                    Int      @id @default(autoincrement())
+  projectId             Int
+  participantName       String
+  location              String
+  disaggregatedSex      Gender
+  disability            Boolean
+  ageGroup              AgeGroup
+  grantAmountReceived   Float
+  grantPurpose          String
+  progress1             String
+  progress2             String
+  outcome               String
+  subsequentGrantAmount Float
+  Project               Project  @relation(fields: [projectId], references: [id])
+}
+
+enum Status {
+  ON_TRACK
+  AT_RISK
+  DELAYED
+  COMPLETED
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum AgeGroup {
+  GROUP_18_29
+  GROUP_30_44
+  GROUP_45_54
+  GROUP_55_64
+  GROUP_65_PLUS
+}
