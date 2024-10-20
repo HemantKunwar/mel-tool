@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Use Case Diagram</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="useCaseCanvas" width="900" height="700"></canvas>
+
+<script>
+    const canvas = document.getElementById('useCaseCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Function to draw an actor (stick figure)
+    function drawActor(x, y, label) {
+        ctx.beginPath();
+        ctx.arc(x, y - 20, 15, 0, Math.PI * 2, true); // Head
+        ctx.moveTo(x, y); // Body
+        ctx.lineTo(x, y + 40);
+        ctx.moveTo(x, y + 10); // Arms
+        ctx.lineTo(x - 30, y + 20);
+        ctx.moveTo(x, y + 10);
+        ctx.lineTo(x + 30, y + 20);
+        ctx.moveTo(x, y + 40); // Legs
+        ctx.lineTo(x - 20, y + 70);
+        ctx.moveTo(x, y + 40);
+        ctx.lineTo(x + 20, y + 70);
+        ctx.stroke();
+
+        // Actor Label
+        ctx.font = "16px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText(label, x, y + 100);
+    }
+
+    // Function to draw a use case (ellipse)
+    function drawUseCase(x, y, label, color) {
+        ctx.beginPath();
+        ctx.ellipse(x, y, 80, 40, 0, 0, Math.PI * 2);
+        ctx.fillStyle = color || 'lightgrey';
+        ctx.fill();
+        ctx.stroke();
+        ctx.font = "14px Arial";
+        ctx.textAlign = "center";
+        ctx.fillStyle = 'black';
+        ctx.fillText(label, x, y + 5);
+    }
+
+    // Draw system boundary
+    function drawSystemBoundary(x, y, width, height, label) {
+        ctx.beginPath();
+        ctx.rect(x, y, width, height);
+        ctx.strokeStyle = 'blue';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.font = "18px Arial";
+        ctx.fillText(label, x + width / 2, y - 10);
+    }
+
+    // Draw actors
+    drawActor(100, 150, "Field Worker");
+    drawActor(100, 300, "Project Manager");
+    drawActor(100, 450, "Data Analyst");
+    drawActor(800, 150, "System Admin");
+
+    // Add a new actor: Supervisor
+    drawActor(100, 600, "Supervisor");
+
+    // Draw system boundary
+    drawSystemBoundary(250, 50, 400, 600, "MEL Framework System");
+
+    // Draw use cases with color-coding
+    drawUseCase(400, 150, "Submit Data", "lightblue");
+    drawUseCase(400, 250, "Manage Project", "lightgreen");
+    drawUseCase(400, 350, "Analyze Data", "lightyellow");
+    drawUseCase(400, 450, "Audit Log", "lightpink");
+    drawUseCase(400, 550, "Manage Users", "lightcoral");
+    drawUseCase(400, 50, "Login & Authentication", "lightcyan");
+
+    // Draw Lines connecting actors to use cases
+    function drawLine(x1, y1, x2, y2) {
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+    }
+
+    // Lines from actors to use cases
+    drawLine(180, 150, 320, 150);  // Field Worker -> Submit Data
+    drawLine(180, 150, 320, 50);   // Field Worker -> Login
+    drawLine(180, 300, 320, 250);  // Project Manager -> Manage Project
+    drawLine(180, 300, 320, 50);   // Project Manager -> Login
+    drawLine(180, 450, 320, 350);  // Data Analyst -> Analyze Data
+    drawLine(180, 450, 320, 50);   // Data Analyst -> Login
+
+    drawLine(720, 150, 480, 150);  // System Admin -> Submit Data
+    drawLine(720, 150, 480, 50);   // System Admin -> Login
+    drawLine(720, 150, 480, 450);  // System Admin -> Audit Log
+    drawLine(720, 150, 480, 550);  // System Admin -> Manage Users
+
+    // Add a line from Supervisor to Manage Project
+    drawLine(180, 600, 320, 250);  // Supervisor -> Manage Project
+
+    // Include relationship (Login is required for other use cases)
+    ctx.setLineDash([5, 5]);  // Dashed line for 'include'
+    drawLine(400, 100, 400, 150);  // Login -> Submit Data
+    drawLine(400, 100, 400, 250);  // Login -> Manage Project
+    drawLine(400, 100, 400, 350);  // Login -> Analyze Data
+    drawLine(400, 100, 400, 450);  // Login -> Audit Log
+    drawLine(400, 100, 400, 550);  // Login -> Manage Users
+    ctx.setLineDash([]);  // Reset to solid lines
+
+</script>
+
+</body>
+</html>
