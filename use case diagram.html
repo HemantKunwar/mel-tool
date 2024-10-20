@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Use Case Diagram</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="useCaseCanvas" width="800" height="600"></canvas>
+
+<script>
+    const canvas = document.getElementById('useCaseCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Function to draw an actor (stick figure)
+    function drawActor(x, y, label) {
+        ctx.beginPath();
+        ctx.arc(x, y - 20, 15, 0, Math.PI * 2, true); // Head
+        ctx.moveTo(x, y); // Body
+        ctx.lineTo(x, y + 40);
+        ctx.moveTo(x, y + 10); // Arms
+        ctx.lineTo(x - 30, y + 20);
+        ctx.moveTo(x, y + 10);
+        ctx.lineTo(x + 30, y + 20);
+        ctx.moveTo(x, y + 40); // Legs
+        ctx.lineTo(x - 20, y + 70);
+        ctx.moveTo(x, y + 40);
+        ctx.lineTo(x + 20, y + 70);
+        ctx.stroke();
+
+        // Actor Label
+        ctx.font = "16px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText(label, x, y + 100);
+    }
+
+    // Function to draw a use case (ellipse)
+    function drawUseCase(x, y, label) {
+        ctx.beginPath();
+        ctx.ellipse(x, y, 80, 40, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.font = "14px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText(label, x, y + 5);
+    }
+
+    // Draw Actors
+    drawActor(100, 150, "Field Worker");
+    drawActor(100, 300, "Project Manager");
+    drawActor(100, 450, "Data Analyst");
+    drawActor(700, 150, "System Admin");
+
+    // Draw Use Cases
+    drawUseCase(400, 150, "Submit Data");
+    drawUseCase(400, 250, "Manage Project");
+    drawUseCase(400, 350, "Analyze Data");
+    drawUseCase(400, 450, "Audit Log");
+    drawUseCase(400, 550, "Manage Users");
+    drawUseCase(400, 50, "Login & Authentication");
+
+    // Draw Lines connecting actors to use cases
+    function drawLine(x1, y1, x2, y2) {
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+    }
+
+    // Lines from actors to use cases
+    drawLine(180, 150, 320, 150);  // Field Worker -> Submit Data
+    drawLine(180, 150, 320, 50);   // Field Worker -> Login
+    drawLine(180, 300, 320, 250);  // Project Manager -> Manage Project
+    drawLine(180, 300, 320, 50);   // Project Manager -> Login
+    drawLine(180, 450, 320, 350);  // Data Analyst -> Analyze Data
+    drawLine(180, 450, 320, 50);   // Data Analyst -> Login
+
+    drawLine(620, 150, 480, 150);  // System Admin -> Submit Data
+    drawLine(620, 150, 480, 50);   // System Admin -> Login
+    drawLine(620, 150, 480, 450);  // System Admin -> Audit Log
+    drawLine(620, 150, 480, 550);  // System Admin -> Manage Users
+
+</script>
+
+</body>
+</html>
